@@ -43,6 +43,7 @@ namespace allpay
 				}
 			};
 
+            // QRType;ID;Name;Contact Type
             var MyQRCode = QRWriter.Write("Contact;2;Retail Store ltd");
 
 			imageMyQR.SetImageBitmap(MyQRCode);
