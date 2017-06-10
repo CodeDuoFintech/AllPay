@@ -24,7 +24,8 @@ namespace allpay
             buttonLogin = this.FindViewById<Button>(Resource.Id.buttonLogin);
             buttonLogin.Click += delegate
             {
-                //SetContentView(Resource.Layout.Menu);
+                //ToDO: Implement proper login mechanism
+
                 StartActivity(typeof(MenuActivity));
             };
 

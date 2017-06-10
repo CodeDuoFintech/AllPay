@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/editUsername"
-        android:text="Username"
+        android:text="username"
         android:gravity="center_vertical" />
     <EditText
         android:inputType="textVisiblePassword"
@@ -16,10 +16,16 @@
         android:layout_height="wrap_content"
         android:id="@+id/editPassword"
         android:gravity="center_vertical"
-        android:password="true" />
+        android:password="true"
+        android:text="password" />
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/buttonLogin"
         android:text="Login" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView1"
+        android:text="This is a prototype version - no credentials required. Just press Login" />
 </LinearLayout>
