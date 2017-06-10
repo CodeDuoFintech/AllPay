@@ -18,7 +18,8 @@ namespace allpay
 		  
 		public async Task<JsonValue> CallAPI(string url)
 		{
-		  // Create an HTTP web request using the URL:
+            // Create an HTTP web request using the URL:
+
 		  HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(new Uri(apiURL += url));
 		  request.ContentType = "application/json";
 		  request.Method = "GET";
@@ -40,18 +41,4 @@ namespace allpay
 
 	} // APIClass
 
-    public class AccountClass
-    {
-
-		public double balance { get; set; }
-		public string currency { get; set; }
-        public string iban { get; set; }
-		public string label { get; set; }
-		public string number { get; set; }
-
-        public AccountClass() 
-        {
-            
-        }
-	}
 }

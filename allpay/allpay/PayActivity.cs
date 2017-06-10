@@ -13,7 +13,6 @@ using Android.Views;
 using Android.Widget;
 
 using ZXing.Mobile;
-using Newtonsoft.Json;
 
 namespace allpay
 {
@@ -25,6 +24,13 @@ namespace allpay
         TextView textViewBalance;
         TextView textViewConsole;
 
+        string paymentMsg = "You are about to pay ";
+        string merchantID;
+        string myID = "2";
+        string referenceID;
+        string currency;
+        double i004_trxn_amount = 0.00;
+
         MobileBarcodeScanner PayScanner;
 
         Double balance = 0.00;
@@ -32,7 +38,6 @@ namespace allpay
         JsonValue json;
 
         APIClass apiCall = new APIClass();
-        AccountClass account = new AccountClass();
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -48,15 +53,9 @@ namespace allpay
             textViewBalance = this.FindViewById<TextView>(Resource.Id.textViewBalance);
 			textViewConsole = this.FindViewById<TextView>(Resource.Id.textViewConsole);
             buttonScan = this.FindViewById<Button>(Resource.Id.buttonScan);
+            buttonScan.Enabled = false; // Enable only if account has balance
 
             GetBalance();
-            textViewBalance.Text += balance.ToString();
-
-            if (balance <= 0.00)
-            {
-                buttonScan.Enabled = false;
-                textViewConsole.Text = "Cannot make payment - not enough available funds";
-            };
 
 			buttonScan.Click += async delegate
             {
@@ -71,32 +70,72 @@ namespace allpay
 
 		void ParseReceipt(ZXing.Result result)
 		{
-			string paymentMsg = "You are about to pay EUR:";
             string[] paymentDetails = new string[] {};
 
             if (result != null && !string.IsNullOrEmpty(result.Text))
             {
                 paymentDetails = result.Text.Split(';');
-                paymentMsg += paymentDetails[1].ToString(); // Amount
-                paymentMsg +=  " to merchant with ID: " + paymentDetails[0].ToString(); // Merchant
-                paymentMsg +=  " Receipt reference: " + paymentDetails[2].ToString(); // Receipt reference ID
+                merchantID = paymentDetails[0].ToString();
+                i004_trxn_amount = Convert.ToDouble(paymentDetails[1].ToString());
+                referenceID = paymentDetails[2].ToString();
+                currency = paymentDetails[3].ToString();
+
+                paymentMsg += currency + ": " + i004_trxn_amount; // Amount
+                paymentMsg += " to merchant with ID: " + merchantID; // Merchant
+                paymentMsg += " Receipt reference: " + referenceID; // Receipt reference ID
+
+                MakePayment();
 			}
 			else
 				paymentMsg = "Scanning Canceled!";
 
-            textViewConsole.Text = paymentMsg;
+            //textViewConsole.Text = paymentMsg;
+
 		} // ParseReceipt
 
         private async void GetBalance()
 		{
-            // ToDO: Dynamically build string
-            string apiUrl = "Accounts/bda8eb884efcea209b2a6240";
+            // ToDo: Dynamically build string
+            string apiUrl = "Accounts/" + myID;
 
             json = await apiCall.CallAPI(apiUrl);
-            JsonValue result = json[0];
-            //account = JsonConvert.DeserializeObject<AccountClass> (json);
-            balance = result["balance"];
+            balance = Convert.ToDouble(json["balance"].ToString());
 
-		} // Get Balance
+			textViewBalance.Text += balance.ToString();
+
+            if (balance <= 0.00)
+            {
+                buttonScan.Enabled = false;
+                textViewConsole.Text = "Cannot make payment - not enough available funds";
+            }
+            else
+                buttonScan.Enabled = true; 
+
+        } // Get Balance
+
+        private void MakePayment ()
+		{
+            AlertDialog.Builder confirmPayment = new AlertDialog.Builder(this);
+            confirmPayment.SetTitle("Make Payment?");
+            confirmPayment.SetMessage(paymentMsg);
+            confirmPayment.SetPositiveButton("Pay", async (sender, e) =>
+            {
+                apiCall = new APIClass();
+                string apiUrl = "Transfers/" + myID + "/" + merchantID + "/" + i004_trxn_amount.ToString() + "/" + referenceID + "/" + currency;
+                json = await apiCall.CallAPI(apiUrl);
+                textViewConsole.Text = json["status"].ToString();
+
+
+            });
+
+            confirmPayment.SetNegativeButton("Cancel", (sender, e) => 
+            {
+                textViewConsole.Text = "Transaction aborted";
+                this.Recreate(); // Reset activity to try another payment
+            });
+
+            Dialog payDialog = confirmPayment.Create();
+            payDialog.Show();
+		}
 	}
 }
