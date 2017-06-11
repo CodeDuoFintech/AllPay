@@ -71,6 +71,7 @@
     <Compile Include="ContactsActivity.cs" />
     <Compile Include="PayActivity.cs" />
     <Compile Include="APIClass.cs" />
+    <Compile Include="ContactClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -90,6 +91,11 @@
     <AndroidResource Include="Resources\layout\MyQR.axml" />
     <AndroidResource Include="Resources\layout\Contacts.axml" />
     <AndroidResource Include="Resources\layout\Pay.axml" />
+    <AndroidResource Include="Resources\mipmap-hdpi\codeduo.png" />
+    <AndroidResource Include="Resources\mipmap-xxxhdpi\codeduo.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\codeduo.png" />
+    <AndroidResource Include="Resources\mipmap-xhdpi\codeduo.png" />
+    <AndroidResource Include="Resources\mipmap-mdpi\codeduo.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\drawable\" />

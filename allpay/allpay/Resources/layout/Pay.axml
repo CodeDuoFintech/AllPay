@@ -14,10 +14,15 @@
         android:layout_height="wrap_content"
         android:id="@+id/buttonScan"
         android:text="Scan Receipt" />
+    <Button
+        android:text="New Payment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonNewPayment" />
     <TextView
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="109.5dp"
         android:id="@+id/textViewConsole"
         android:text="Messages:" />
 </LinearLayout>

@@ -8,9 +8,9 @@ using Android.App;
 [assembly: AssemblyTitle("allpay")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("CodeDuo")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("(c) Kyriakos Galatis")]
+[assembly: AssemblyCopyright("(c) CodeDuo team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

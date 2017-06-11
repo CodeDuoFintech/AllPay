@@ -20,16 +20,16 @@ namespace allpay
     public class PayActivity : Activity
     {
         Button buttonScan;
+        Button buttonNewPayment;
 
         TextView textViewBalance;
         TextView textViewConsole;
 
         string paymentMsg = "You are about to pay ";
         string merchantID;
-        string myID = "2";
         string referenceID;
         string currency;
-        double i004_trxn_amount = 0.00;
+        Double i004_trxn_amount = 0.00;
 
         MobileBarcodeScanner PayScanner;
 
@@ -38,6 +38,7 @@ namespace allpay
         JsonValue json;
 
         APIClass apiCall = new APIClass();
+        readonly ContactClass myDetails = new ContactClass();
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -52,12 +53,13 @@ namespace allpay
 
             textViewBalance = this.FindViewById<TextView>(Resource.Id.textViewBalance);
 			textViewConsole = this.FindViewById<TextView>(Resource.Id.textViewConsole);
+            buttonNewPayment = this.FindViewById<Button>(Resource.Id.buttonNewPayment);
             buttonScan = this.FindViewById<Button>(Resource.Id.buttonScan);
             buttonScan.Enabled = false; // Enable only if account has balance
 
             GetBalance();
 
-			buttonScan.Click += async delegate
+            buttonScan.Click += async delegate
             {
 
                 PayScanner = new ZXing.Mobile.MobileBarcodeScanner();
@@ -65,6 +67,11 @@ namespace allpay
 
                 ParseReceipt(result);
             };
+
+            buttonNewPayment.Click += delegate
+			{
+                this.Recreate();
+			};
 
         } // OnCreate
 
@@ -95,13 +102,18 @@ namespace allpay
 
         private async void GetBalance()
 		{
+			apiCall = new APIClass();
+
             // ToDo: Dynamically build string
-            string apiUrl = "Accounts/" + myID;
+            string apiUrl = "Accounts/" + 
+                            myDetails.ID + "/" +
+                            myDetails.defaultCurrency
+                            ;
 
             json = await apiCall.CallAPI(apiUrl);
             balance = Convert.ToDouble(json["balance"].ToString());
 
-			textViewBalance.Text += balance.ToString();
+            textViewBalance.Text = "Available Balance: " + myDetails.defaultCurrency + balance.ToString();
 
             if (balance <= 0.00)
             {
@@ -121,10 +133,16 @@ namespace allpay
             confirmPayment.SetPositiveButton("Pay", async (sender, e) =>
             {
                 apiCall = new APIClass();
-                string apiUrl = "Transfers/" + myID + "/" + merchantID + "/" + i004_trxn_amount.ToString() + "/" + referenceID + "/" + currency;
+                string apiUrl = "Transfers/" + 
+                                myDetails.ID + "/" + 
+                                merchantID + "/" + 
+                                i004_trxn_amount.ToString() + "/" + 
+                                referenceID + "/" + 
+                                currency;
                 json = await apiCall.CallAPI(apiUrl);
                 textViewConsole.Text = json["status"].ToString();
 
+                GetBalance(); // Update balance
 
             });
 

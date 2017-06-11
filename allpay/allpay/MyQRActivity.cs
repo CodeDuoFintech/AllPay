@@ -20,6 +20,7 @@ namespace allpay
     public class MyQRActivity : Activity
     {
         ImageView imageMyQR;
+        ContactClass myDetails = new ContactClass();
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -44,7 +45,15 @@ namespace allpay
 			};
 
             // QRType;ID;Name;Contact Type
-            var MyQRCode = QRWriter.Write("Contact;2;Retail Store ltd");
+            var MyQRCode = QRWriter.Write(myDetails.Type + ";" + 
+                                          myDetails.ID + ";" + 
+                                          myDetails.Name + ";" + 
+                                          myDetails.LastName + ";" +
+                                          myDetails.defaultCurrency + ";" +
+                                          myDetails.alternateCurrency + ";" +
+                                          myDetails.DOB + ";" +
+                                          myDetails.defaultLanguage
+                                         );
 
 			imageMyQR.SetImageBitmap(MyQRCode);
         }

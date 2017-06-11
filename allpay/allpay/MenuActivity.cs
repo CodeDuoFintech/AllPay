@@ -42,6 +42,7 @@ namespace allpay
 
 			// Contacts button
 			buttonContacts = this.FindViewById<Button>(Resource.Id.buttonContacts);
+            buttonContacts.Enabled = false; // ToDo: add application contact and enable money transfers to it
 			buttonContacts.Click += delegate
 			{
                 StartActivity(typeof(ContactsActivity));

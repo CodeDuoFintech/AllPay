@@ -14,7 +14,7 @@ namespace allpay
         public APIClass()
         {
 
-        } // APIClass
+        } // APIClass()
 		  
 		public async Task<JsonValue> CallAPI(string url)
 		{
